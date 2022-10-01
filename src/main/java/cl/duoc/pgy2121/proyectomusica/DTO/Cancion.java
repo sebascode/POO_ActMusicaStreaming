@@ -1,23 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cl.duoc.pgy2121.proyectomusica.DTO;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
-/**
- *
- * @author scode
- */
-
-/*
- * En una primera etapa, almacenamos la información de las canciones que tiene 
- * una lista. La canción tiene un título, un artista, tiempo de duración, 
- * si es favorita o no y si se encuentra descargada o no en el dispositivo.
- */
 public class Cancion {
     private String titulo;
     private String artista;
@@ -25,7 +10,7 @@ public class Cancion {
     private boolean favorita;
     private boolean descargada;
     
-    private int tiempoActual;
+    private long tiempoActual;
     
     public Cancion()
     {
@@ -80,6 +65,12 @@ public class Cancion {
     public void setDuracion(long duracion) {
         this.duracion = this.duracion.plus(duracion, ChronoUnit.SECONDS);
     }
+    public void setDuracion(long minutos, long segundos){
+        Duration dur = Duration.ZERO;
+        this.duracion = dur
+                .plusMinutes(minutos)
+                .plusSeconds(segundos);
+    }
 
     public boolean isFavorita() {
         return favorita;
@@ -98,8 +89,14 @@ public class Cancion {
     }
     
     // Que permita adelantar la canción en una cantidad variable de segundos
-    public void Adelanter(int donde){
-        this.tiempoActual = donde;
+    public void Adelantar(long donde){
+        long segundos = this.duracion.getSeconds();
+        if(segundos > donde){
+            this.tiempoActual = segundos;
+        }
+        else{
+            this.tiempoActual = donde;
+        }
     }
     
     // Que imprima el título, artista y tiempo de duración de una canción en minutos y segundos, ejemplo: 3:45
@@ -109,13 +106,18 @@ public class Cancion {
         System.out.println(this.artista + " - " + this.titulo + " ("+ strDuracion + ") " );
     }
     
+    @Override
+    public String toString(){
+        String strDuracion = this.getDuracionString();
+        
+        return (this.artista + " - " + this.titulo + " ("+ strDuracion + ") " );
+    }
+    
     /* Que retorne si la canción es larga o normal. Una canción larga es aquella
      * que su duración es de 5 minutos o más
      */
     public boolean esLarga(){
         int minutosTope = 5 * 60;
         return this.getDuracionMinutes() > minutosTope;
-    }
-    
-    
+    }    
 }
